@@ -3,5 +3,3 @@ class NoteEntry {
   final String content;
   NoteEntry({required this.title, required this.content});
 }
-
-
