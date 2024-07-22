@@ -53,6 +53,10 @@ class MyHomePage extends ConsumerWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return ListTile(
+                  tileColor: Theme.of(context)
+                      .colorScheme
+                      .onPrimaryContainer
+                      .withOpacity(0.1),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 10),
                   title: Text(
                     noteNotifier.noeEntry[index].title,
@@ -133,8 +137,14 @@ class NoteInput extends ConsumerWidget {
         onPressed: () {
           String title = titleController.text.trim();
           String content = contextController.text.trim();
-          noteNotifier.addNote(title, content);
-          Navigator.pop(context);
+          if (title.isEmpty && content.isEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Center(child: Text('Title and Content cannot be empty')),
+            ));
+          } else {
+            noteNotifier.addNote(title, content);
+            Navigator.pop(context);
+          }
         },
         label: const Text('Save'),
         icon: const Icon(Icons.save),
