@@ -77,13 +77,68 @@ class MyHomePage extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
           icon: const Icon(Icons.add),
           onPressed: () {
-             Dialog.fullscreen(
-              child: Dialog(
-                child: Text('data'),
-              ),
-            );
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NoteInput(),
+                ));
           },
           label: const Text('New Note')),
+    );
+  }
+}
+
+class NoteInput extends ConsumerWidget {
+  const NoteInput({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final noteNotifier = ref.read(noteProvider);
+    TextEditingController titleController = TextEditingController();
+    TextEditingController contextController = TextEditingController();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('New Note'),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textCapitalization: TextCapitalization.words,
+              controller: titleController,
+              decoration: const InputDecoration(
+                  hintText: 'Title', border: OutlineInputBorder()),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textCapitalization: TextCapitalization.sentences,
+              controller: contextController,
+              maxLines: 25,
+              //expands: true,
+              decoration: const InputDecoration(
+                  border: InputBorder.none, hintText: 'Content'),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          String title = titleController.text.trim();
+          String content = contextController.text.trim();
+          noteNotifier.addNote(title, content);
+          Navigator.pop(context);
+        },
+        label: const Text('Save'),
+        icon: const Icon(Icons.save),
+      ),
     );
   }
 }

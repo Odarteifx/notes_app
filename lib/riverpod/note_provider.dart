@@ -4,14 +4,16 @@ import 'package:notes_app/data/notes.dart';
 import 'package:notes_app/models/models.dart';
 
 class NoteNotifier extends ChangeNotifier {
-  List<NoteEntry> get noeEntry => noteEntry;
+  List<NoteEntry> get noeEntry => noteList;
 
-  void addNote(NoteEntry note) {
-    noeEntry.add(note);
+  void addNote(String title, String content) {
+    noeEntry.add(NoteEntry(title: title, content: content));
+    notifyListeners();
   }
 
   void removeNote(NoteEntry note) {
     noeEntry.remove(note);
+    notifyListeners();
   }
 }
 
