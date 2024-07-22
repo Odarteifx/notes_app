@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notes_app/models/models.dart';
 import 'package:notes_app/riverpod/note_provider.dart';
 
 void main() {
@@ -29,7 +28,7 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final count = ref.watch(counterProvider);
+    final noteNotifier = ref.watch(noteProvider);
     const String image =
         'https://images.unsplash.com/photo-1615092607420-e545863a67c4?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
     return Scaffold(
@@ -51,18 +50,30 @@ class MyHomePage extends ConsumerWidget {
             ),
           ),
           SliverList(
-            delegate:
-                SliverChildBuilderDelegate((BuildContext context, int index) {
-              return ListTile(
-                title: Text(count.toString()),
-                trailing: IconButton(onPressed: (){
-                  ref.read(counterProvider.notifier).state++;
-                }, icon: Icon(Icons.add)),
-              );
-            }),
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return ListTile(
+                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  title: Text(noteNotifier.noeEntry[index].title),
+                  subtitle: Text(noteNotifier.noeEntry[index].content,
+                  softWrap: true,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  ),
+                  trailing: IconButton(
+                      onPressed: () {}, icon: const Icon(Icons.edit)),
+                );
+              },
+              childCount: noteNotifier.noeEntry.length,
+            ),
           )
         ],
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        icon: const Icon(Icons.add),
+          onPressed: () {
+          },
+           label: const Text('New Note')),
     );
   }
 }
