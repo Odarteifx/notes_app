@@ -53,12 +53,17 @@ class MyHomePage extends ConsumerWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return ListTile(
-                 contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                  title: Text(noteNotifier.noeEntry[index].title),
-                  subtitle: Text(noteNotifier.noeEntry[index].content,
-                  softWrap: true,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                  title: Text(
+                    noteNotifier.noeEntry[index].title,
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.w500),
+                  ),
+                  subtitle: Text(
+                    noteNotifier.noeEntry[index].content,
+                    softWrap: true,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   trailing: IconButton(
                       onPressed: () {}, icon: const Icon(Icons.edit)),
@@ -70,10 +75,15 @@ class MyHomePage extends ConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
-        icon: const Icon(Icons.add),
+          icon: const Icon(Icons.add),
           onPressed: () {
+             Dialog.fullscreen(
+              child: Dialog(
+                child: Text('data'),
+              ),
+            );
           },
-           label: const Text('New Note')),
+          label: const Text('New Note')),
     );
   }
 }
