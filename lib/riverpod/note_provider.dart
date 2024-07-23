@@ -11,8 +11,12 @@ class NoteNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeNote(NoteEntry note) {
-    noeEntry.remove(note);
+  void updateNote(int index, String title, String content){
+    noeEntry[index] = NoteEntry(title: title, content: content);
+    notifyListeners();
+  }
+  void removeNote(int index) {
+    noeEntry.removeAt(index);
     notifyListeners();
   }
 }

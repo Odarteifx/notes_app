@@ -52,25 +52,44 @@ class MyHomePage extends ConsumerWidget {
           SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return ListTile(
-                  tileColor: Theme.of(context)
-                      .colorScheme
-                      .onPrimaryContainer
-                      .withOpacity(0.1),
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 10),
-                  title: Text(
-                    noteNotifier.noeEntry[index].title,
-                    style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w500),
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Dismissible(
+                    key: Key(noteNotifier.noeEntry[index].title),
+                    background: Container(
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                    onDismissed: (direction) {
+                      ref.read(noteProvider).removeNote(index);
+                    },
+                    child: ListTile(
+                      tileColor: Theme.of(context)
+                          .colorScheme
+                          .onPrimaryContainer
+                          .withOpacity(0.1),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                      title: Text(
+                        noteNotifier.noeEntry[index].title,
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500),
+                      ),
+                      subtitle: Text(
+                        noteNotifier.noeEntry[index].content,
+                        softWrap: true,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      trailing: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => NoteEdit(index: index),
+                                ));
+                          },
+                          icon: const Icon(Icons.edit)),
+                    ),
                   ),
-                  subtitle: Text(
-                    noteNotifier.noeEntry[index].content,
-                    softWrap: true,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  trailing: IconButton(
-                      onPressed: () {}, icon: const Icon(Icons.edit)),
                 );
               },
               childCount: noteNotifier.noeEntry.length,
@@ -91,6 +110,8 @@ class MyHomePage extends ConsumerWidget {
     );
   }
 }
+
+//New Note Page
 
 class NoteInput extends ConsumerWidget {
   const NoteInput({super.key});
@@ -149,6 +170,62 @@ class NoteInput extends ConsumerWidget {
         label: const Text('Save'),
         icon: const Icon(Icons.save),
       ),
+    );
+  }
+}
+
+//Edit Note Page
+class NoteEdit extends ConsumerWidget {
+  final int index;
+  const NoteEdit({super.key, required this.index});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final noteNotifier = ref.read(noteProvider);
+    final note = noteNotifier.noeEntry[index];
+    final TextEditingController contentController =
+        TextEditingController(text: note.content);
+    final TextEditingController titleController =
+        TextEditingController(text: note.title);
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(note.title),
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                  hintText: 'Title', border: OutlineInputBorder()),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            TextField(
+              textCapitalization: TextCapitalization.sentences,
+              controller: contentController,
+              maxLines: 25,
+              //expands: true,
+              decoration: const InputDecoration(
+                  border: InputBorder.none, hintText: 'Content'),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+            String title = titleController.text.trim();
+            String content = contentController.text.trim();
+            ref.read(noteProvider).updateNote(index, title, content);
+            Navigator.pop(context);
+          },
+          label: const Text('Save')),
     );
   }
 }
