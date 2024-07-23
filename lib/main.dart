@@ -53,21 +53,27 @@ class MyHomePage extends ConsumerWidget {
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.only(bottom: 5.0),
                   child: Dismissible(
                     key: Key(noteNotifier.noeEntry[index].title),
+                    movementDuration: const Duration(milliseconds: 800),
                     background: Container(
-                      color: Theme.of(context).colorScheme.error,
+                      color: Colors.redAccent,
                     ),
                     onDismissed: (direction) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Center(
+                              child: Text(
+                                  '${noteNotifier.noeEntry[index].title} has been deleted'))));
                       ref.read(noteProvider).removeNote(index);
                     },
                     child: ListTile(
                       tileColor: Theme.of(context)
                           .colorScheme
-                          .onPrimaryContainer
-                          .withOpacity(0.1),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                          .secondaryContainer
+                          .withOpacity(0.5),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 10),
                       title: Text(
                         noteNotifier.noeEntry[index].title,
                         style: const TextStyle(
@@ -201,6 +207,7 @@ class NoteEdit extends ConsumerWidget {
             ),
             TextField(
               controller: titleController,
+              textCapitalization: TextCapitalization.words,
               decoration: const InputDecoration(
                   hintText: 'Title', border: OutlineInputBorder()),
             ),
