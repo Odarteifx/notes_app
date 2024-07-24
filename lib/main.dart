@@ -29,24 +29,23 @@ class MyHomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final noteNotifier = ref.watch(noteProvider);
-    const String image =
-        'https://images.unsplash.com/photo-1615092607420-e545863a67c4?q=80&w=3270&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
+          const SliverAppBar(
             pinned: true,
             floating: true,
             snap: true,
             // stretch: true,
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            expandedHeight: 120,
+            //backgroundColor: Colors.white,
+            expandedHeight: 80,
             flexibleSpace: FlexibleSpaceBar(
-              title: const Text('Notes'),
-              background: Image.network(
-                image,
-                fit: BoxFit.fill,
-              ),
+              title: Text('Notes',
+              textAlign: TextAlign.left,),
+              // background: Image.network(
+              //   image,
+              //   fit: BoxFit.fill,
+              // ),
             ),
           ),
           SliverList(
@@ -137,7 +136,7 @@ class NoteInput extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Note'),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+       // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -202,7 +201,7 @@ class NoteEdit extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(note.title),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        //backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10),
