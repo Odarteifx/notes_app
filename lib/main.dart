@@ -232,6 +232,7 @@ class NoteEdit extends ConsumerWidget {
             ref.read(noteProvider).updateNote(index, title, content);
             Navigator.pop(context);
           },
+          icon: const Icon(Icons.save),
           label: const Text('Save')),
     );
   }
