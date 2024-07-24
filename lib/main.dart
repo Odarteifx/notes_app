@@ -58,7 +58,13 @@ class MyHomePage extends ConsumerWidget {
                     key: Key(noteNotifier.noeEntry[index].title),
                     movementDuration: const Duration(milliseconds: 800),
                     background: Container(
+                      alignment: Alignment.centerRight,
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       color: Colors.redAccent,
+                      child: const Icon(
+                        Icons.delete,
+                        color: Colors.white,
+                        ),
                     ),
                     onDismissed: (direction) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -71,7 +77,7 @@ class MyHomePage extends ConsumerWidget {
                       tileColor: Theme.of(context)
                           .colorScheme
                           .secondaryContainer
-                          .withOpacity(0.5),
+                          .withOpacity(0.3),
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 10),
                       title: Text(
