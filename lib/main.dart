@@ -32,16 +32,29 @@ class MyHomePage extends ConsumerWidget {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          const SliverAppBar(
+          SliverAppBar(
             pinned: true,
             floating: true,
             snap: true,
             // stretch: true,
             //backgroundColor: Colors.white,
             expandedHeight: 80,
-            flexibleSpace: FlexibleSpaceBar(
-              title: Text('Notes',
-              textAlign: TextAlign.left,),
+            actions: [
+              IconButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return DeletedNotes();
+                      },
+                    ));
+                  },
+                  icon: const Icon(Icons.more_horiz))
+            ],
+            flexibleSpace: const FlexibleSpaceBar(
+              title: Text(
+                'Notes',
+                textAlign: TextAlign.left,
+              ),
               // background: Image.network(
               //   image,
               //   fit: BoxFit.fill,
@@ -63,7 +76,7 @@ class MyHomePage extends ConsumerWidget {
                       child: const Icon(
                         Icons.delete,
                         color: Colors.white,
-                        ),
+                      ),
                     ),
                     onDismissed: (direction) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -136,7 +149,7 @@ class NoteInput extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Note'),
-       // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        // backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -239,6 +252,20 @@ class NoteEdit extends ConsumerWidget {
           },
           icon: const Icon(Icons.save),
           label: const Text('Save')),
+    );
+  }
+}
+
+class DeletedNotes extends StatelessWidget {
+  const DeletedNotes({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Recently Deleted'),
+        actions: [TextButton(onPressed: (){}, child: const Text('Edit'))],
+      ),
     );
   }
 }
