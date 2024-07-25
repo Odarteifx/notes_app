@@ -79,11 +79,16 @@ class MyHomePage extends ConsumerWidget {
                       ),
                     ),
                     onDismissed: (direction) {
+                      final note = noteNotifier.noeEntry[index];
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Center(
                               child: Text(
                                   '${noteNotifier.noeEntry[index].title} has been deleted'))));
                       ref.read(noteProvider).removeNote(index);
+                      ref.read(noteProvider).deleteList(
+                          title: note.title,
+                          content: note.content,
+                         );
                     },
                     child: ListTile(
                       tileColor: Theme.of(context)
@@ -256,15 +261,24 @@ class NoteEdit extends ConsumerWidget {
   }
 }
 
-class DeletedNotes extends StatelessWidget {
+class DeletedNotes extends ConsumerWidget {
   const DeletedNotes({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notesNotifer = ref.watch(noteProvider).deletedNote;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recently Deleted'),
-        actions: [TextButton(onPressed: (){}, child: const Text('Edit'))],
+        actions: [TextButton(onPressed: () {}, child: const Text('Edit'))],
+      ),
+      body: ListView.builder(
+        itemCount: notesNotifer.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(notesNotifer[index].title),
+          );
+        },
       ),
     );
   }
