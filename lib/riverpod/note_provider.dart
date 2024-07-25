@@ -23,11 +23,17 @@ class NoteNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+
   void deleteList({
     required String title,
     required String content,
   }) {
     deletedNote.add(NoteEntry(title: title, content: content));
+    notifyListeners();
+  }
+
+  void restoreDelete(int index){
+    deletedNote.removeAt(index);
     notifyListeners();
   }
 }

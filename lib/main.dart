@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notes_app/data/notes.dart';
 import 'package:notes_app/riverpod/note_provider.dart';
 
 void main() {
@@ -164,7 +165,7 @@ class NoteInput extends ConsumerWidget {
               textCapitalization: TextCapitalization.words,
               controller: titleController,
               decoration: const InputDecoration(
-                  hintText: 'Title', border: OutlineInputBorder()),
+                  hintText: 'Title', border: InputBorder.none),
             ),
             const SizedBox(
               height: 10,
@@ -226,10 +227,11 @@ class NoteEdit extends ConsumerWidget {
               height: 10,
             ),
             TextField(
+              style: const TextStyle(fontWeight: FontWeight.bold),
               controller: titleController,
               textCapitalization: TextCapitalization.words,
               decoration: const InputDecoration(
-                  hintText: 'Title', border: OutlineInputBorder()),
+                  hintText: 'Title', border: InputBorder.none),
             ),
             const SizedBox(
               height: 10,
@@ -258,7 +260,6 @@ class NoteEdit extends ConsumerWidget {
   }
 }
 
-
 class DeletedNotes extends ConsumerStatefulWidget {
   const DeletedNotes({super.key});
 
@@ -267,35 +268,70 @@ class DeletedNotes extends ConsumerStatefulWidget {
 }
 
 class _DeletedNotesState extends ConsumerState<DeletedNotes> {
+  bool _isEditing = false;
+
   @override
   Widget build(BuildContext context) {
     final notesNotifer = ref.watch(noteProvider).deletedNote;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Recently Deleted'),
-        actions: [TextButton(onPressed: () {}, child: const Text('Edit'))],
+        actions: [
+          TextButton(
+              onPressed: () {
+                setState(() {
+                  _isEditing = !_isEditing;
+                });
+              },
+              child: (deletedNotes.isNotEmpty && _isEditing)
+                  ? const Text('Done')
+                  : const Text('Edit'))
+        ],
       ),
-      body: ListView.builder(
-        itemCount: notesNotifer.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 5.0),
-            child: ListTile(
-              tileColor: Colors.grey[200],
-              title: Text(
-                notesNotifer[index].title,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-              ),
-              subtitle: Text(
-                notesNotifer[index].content,
-                softWrap: true,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
+      body: deletedNotes.isEmpty
+          ? const Center(
+              child: Text(
+              'No recently deleted notes',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ))
+          : ListView.builder(
+              itemCount: notesNotifer.length,
+              itemBuilder: (context, index) {
+                final note = notesNotifer[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: ListTile(
+                    tileColor: Colors.grey[200],
+                    title: Text(
+                      note.title,
+                      style: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w500),
+                    ),
+                    subtitle: Text(
+                      note.content,
+                      softWrap: true,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    trailing: _isEditing
+                        ? IconButton(
+                            onPressed: () {
+                              ref
+                                  .read(noteProvider)
+                                  .addNote(note.title, note.content);
+                              ref.read(noteProvider).restoreDelete(index);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Center(
+                                          child:
+                                              Text('${note.title} restored'))));
+                            },
+                            icon: const Icon(Icons.restore))
+                        : null,
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
