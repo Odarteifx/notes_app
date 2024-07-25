@@ -44,7 +44,7 @@ class MyHomePage extends ConsumerWidget {
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) {
-                        return DeletedNotes();
+                        return const DeletedNotes();
                       },
                     ));
                   },
@@ -86,15 +86,12 @@ class MyHomePage extends ConsumerWidget {
                                   '${noteNotifier.noeEntry[index].title} has been deleted'))));
                       ref.read(noteProvider).removeNote(index);
                       ref.read(noteProvider).deleteList(
-                          title: note.title,
-                          content: note.content,
-                         );
+                            title: note.title,
+                            content: note.content,
+                          );
                     },
                     child: ListTile(
-                      tileColor: Theme.of(context)
-                          .colorScheme
-                          .secondaryContainer
-                          .withOpacity(0.3),
+                      tileColor: Colors.grey[100],
                       contentPadding:
                           const EdgeInsets.symmetric(horizontal: 10),
                       title: Text(
@@ -275,8 +272,21 @@ class DeletedNotes extends ConsumerWidget {
       body: ListView.builder(
         itemCount: notesNotifer.length,
         itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(notesNotifer[index].title),
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: ListTile(
+              tileColor: Colors.grey[200],
+              title: Text(
+                notesNotifer[index].title,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+              subtitle: Text(
+                notesNotifer[index].content,
+                softWrap: true,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           );
         },
       ),
