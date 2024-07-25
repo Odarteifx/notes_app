@@ -258,11 +258,17 @@ class NoteEdit extends ConsumerWidget {
   }
 }
 
-class DeletedNotes extends ConsumerWidget {
+
+class DeletedNotes extends ConsumerStatefulWidget {
   const DeletedNotes({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DeletedNotes> createState() => _DeletedNotesState();
+}
+
+class _DeletedNotesState extends ConsumerState<DeletedNotes> {
+  @override
+  Widget build(BuildContext context) {
     final notesNotifer = ref.watch(noteProvider).deletedNote;
     return Scaffold(
       appBar: AppBar(
